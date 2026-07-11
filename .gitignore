@@ -1,0 +1,17 @@
+# Build & Dependencies
+node_modules/
+dist/
+.astro/
+
+# Env & Secrets
+.env
+.env.*
+!.env.example
+
+# System
+.DS_Store
+Thumbs.db
+
+# Python
+__pycache__/
+*.pyc

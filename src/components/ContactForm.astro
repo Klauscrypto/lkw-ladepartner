@@ -1,0 +1,112 @@
+---
+import { ui, brand } from '../i18n/ui.ts';
+const { lang } = Astro.props;
+const t = ui[lang].form;
+---
+<form id="contactForm" class="cform" novalidate>
+  <div class="cform-row">
+    <label class="cfield">
+      <span>{t.name} *</span>
+      <input type="text" name="name" required autocomplete="name" />
+    </label>
+    <label class="cfield">
+      <span>{t.company}</span>
+      <input type="text" name="company" autocomplete="organization" />
+    </label>
+  </div>
+  <div class="cform-row">
+    <label class="cfield">
+      <span>{t.email} *</span>
+      <input type="email" name="email" required autocomplete="email" />
+    </label>
+    <label class="cfield">
+      <span>{t.phone}</span>
+      <input type="tel" name="phone" autocomplete="tel" />
+    </label>
+  </div>
+  <label class="cfield">
+    <span>{t.message} *</span>
+    <textarea name="message" rows="4" required placeholder={t.messagePlaceholder}></textarea>
+  </label>
+
+  <!-- Honeypot (für Menschen unsichtbar) -->
+  <div class="cf-hp" aria-hidden="true">
+    <label>Website<input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
+  </div>
+
+  <label class="cf-consent">
+    <input type="checkbox" name="consent" required />
+    <span set:html={t.consent}></span>
+  </label>
+
+  <button type="submit" class="btn btn-amber cf-submit">{t.submit}</button>
+  <p class="cf-status" role="status" aria-live="polite"></p>
+
+  <input type="hidden" name="lang" value={lang} />
+</form>
+
+<script is:inline define:vars={{ t }}>
+  (function () {
+    const form = document.getElementById('contactForm');
+    if (!form) return;
+    const btn = form.querySelector('.cf-submit');
+    const status = form.querySelector('.cf-status');
+    const btnLabel = btn.textContent;
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      status.className = 'cf-status';
+      const data = new FormData(form);
+      const name = (data.get('name') || '').toString().trim();
+      const email = (data.get('email') || '').toString().trim();
+      const msg = (data.get('message') || '').toString().trim();
+      const consent = form.querySelector('[name="consent"]').checked;
+      const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+      if (!name || !emailOk || !msg || !consent) {
+        status.textContent = t.required;
+        status.classList.add('is-err');
+        return;
+      }
+      btn.disabled = true;
+      btn.textContent = t.sending;
+      try {
+        const res = await fetch('/send.php', { method: 'POST', body: data, headers: { 'Accept': 'application/json' } });
+        const json = await res.json().catch(() => ({ ok: res.ok }));
+        if (res.ok && json.ok) {
+          status.textContent = t.ok;
+          status.classList.add('is-ok');
+          form.reset();
+        } else {
+          throw new Error('send failed');
+        }
+      } catch (err) {
+        status.textContent = t.err;
+        status.classList.add('is-err');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = btnLabel;
+      }
+    });
+  })();
+</script>
+
+<style is:global>
+  .cform{background:#fff;border:1px solid var(--line);border-radius:18px;padding:28px;
+    display:flex;flex-direction:column;gap:16px;box-shadow:0 24px 50px -34px rgba(16,54,42,.35);}
+  .cform-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .cfield{display:flex;flex-direction:column;gap:6px;}
+  .cfield span{font-size:13px;font-family:'IBM Plex Mono',monospace;letter-spacing:.4px;color:var(--steel);}
+  .cfield input,.cfield textarea{font-family:'IBM Plex Sans',sans-serif;font-size:16px;color:var(--ink);
+    background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:12px 14px;width:100%;resize:vertical;}
+  .cfield input:focus,.cfield textarea:focus{border-color:var(--green);outline:2px solid rgba(28,107,76,.15);outline-offset:0;}
+  .cf-hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;}
+  .cf-consent{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;color:var(--ink-soft);line-height:1.5;}
+  .cf-consent input{margin-top:3px;flex:none;width:16px;height:16px;accent-color:var(--green);}
+  .cf-consent a{color:var(--green);text-decoration:underline;}
+  .cf-submit{align-self:flex-start;border:none;cursor:pointer;}
+  .cf-submit:disabled{opacity:.6;cursor:progress;}
+  .cf-status{font-size:14.5px;margin:0;min-height:1px;}
+  .cf-status.is-ok{color:var(--green);font-weight:600;}
+  .cf-status.is-err{color:#c0492f;font-weight:600;}
+  @media (max-width:560px){ .cform-row{grid-template-columns:1fr;} .cform{padding:22px;} }
+</style>

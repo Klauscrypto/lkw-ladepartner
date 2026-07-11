@@ -1,0 +1,85 @@
+// Ladehardware unserer Partner. Nur technische Fakten aus den Hersteller-Datenblättern,
+// eigene Beschreibungstexte. Marken-/Produktnamen gehören den jeweiligen Herstellern.
+
+export const hardwareUi = {
+  de: {
+    eyebrow: 'Ladehardware',
+    h1: 'Die passende Ladehardware — herstelleroffen',
+    lead: 'Wir sind nicht an eine Marke gebunden, sondern wählen für jeden Betriebshof das passende DC-Ladesystem. Alle Systeme sprechen OCPP und laufen damit unter der Virta-Plattform in Ihrem Branding.',
+    specsH: 'Technische Daten',
+    fitH: 'Passt für',
+    note: 'Auszug aus den Herstellerangaben, ohne Gewähr. Die finale Systemauswahl erfolgt projektbezogen nach Standortanalyse. Produkt- und Markennamen sind Eigentum der jeweiligen Hersteller; die Verfügbarkeit hängt von den Partnervereinbarungen ab.',
+    ctaH: 'Welches System passt zu Ihrem Hof?',
+    ctaText: 'Wir empfehlen die Hardware nach Ihrer Flotte, den Standzeiten und dem Netzanschluss.',
+    cta: 'Beratung anfragen',
+    recommended: 'Empfehlung fürs Depot',
+  },
+  en: {
+    eyebrow: 'Charging hardware',
+    h1: 'The right charging hardware — vendor-neutral',
+    lead: 'We are not tied to a single brand; we select the right DC charging system for each depot. All systems speak OCPP and therefore run on the Virta platform in your branding.',
+    specsH: 'Technical data',
+    fitH: 'Best for',
+    note: 'Extract from manufacturer data, without guarantee. The final system selection is made per project after a site assessment. Product and brand names are the property of their respective manufacturers; availability depends on partner agreements.',
+    ctaH: 'Which system fits your depot?',
+    ctaText: 'We recommend the hardware based on your fleet, dwell times and grid connection.',
+    cta: 'Request advice',
+    recommended: 'Recommended for depots',
+  },
+};
+
+// Wertangaben bewusst sprachneutral gehalten; nur Labels werden übersetzt.
+export const hardware = [
+  {
+    slug: 'zebra-boost-e',
+    brand: 'Zebra Electronics',
+    name: 'BOOST-E (BST-Serie)',
+    recommended: true,
+    tagline: { de: 'Verteilte Ultraschnell-Ladelösung für Flotten', en: 'Distributed ultra-fast charging for fleets' },
+    desc: {
+      de: 'Verteiltes System aus einer flüssiggekühlten Leistungseinheit (Huawei FusionCharge) und mehreren Ladesäulen. Eine Einheit versorgt bis zu 6 Säulen bzw. 12 Fahrzeuge gleichzeitig und verteilt die Leistung dynamisch dorthin, wo sie gebraucht wird — ideal für Betriebshöfe mit vielen Fahrzeugen und in Kombination mit PV und Speicher.',
+      en: 'Distributed system of a liquid-cooled power unit (Huawei FusionCharge) and multiple dispensers. One unit serves up to 6 dispensers or 12 vehicles at once and distributes power dynamically to where it is needed — ideal for depots with many vehicles and in combination with PV and storage.',
+    },
+    fit: { de: 'Depot- & Flottenladen auf dem Betriebshof', en: 'Depot & fleet charging on site' },
+    specs: [
+      { l: { de: 'Leistung je Ladesäule', en: 'Power per dispenser' }, v: '500 kW / 500 A (Peak)' },
+      { l: { de: 'Leistungseinheit', en: 'Power unit' }, v: 'bis 720 kW DC (Huawei FusionCharge)' },
+      { l: { de: 'Skalierung', en: 'Scalability' }, v: '1 Einheit → bis 6 Säulen / 12 Fahrzeuge' },
+      { l: { de: 'Anschlüsse', en: 'Connectors' }, v: '2× CCS2 je Säule' },
+      { l: { de: 'Spannungsbereich', en: 'Voltage range' }, v: '200–1000 V DC' },
+      { l: { de: 'Lastmanagement', en: 'Load management' }, v: { de: 'dynamisch, PV- & speicherfähig', en: 'dynamic, PV & storage ready' } },
+      { l: { de: 'Protokolle', en: 'Protocols' }, v: 'OCPP 1.6j / 2.0.x, ISO 15118, DIN 70121' },
+      { l: { de: 'Bezahlung', en: 'Payment' }, v: 'RFID, POS (Kredit-/Debitkarte)' },
+      { l: { de: 'Kühlung', en: 'Cooling' }, v: { de: 'flüssiggekühlt, leise (ab 55 dB)', en: 'liquid-cooled, quiet (from 55 dB)' } },
+      { l: { de: 'Wirkungsgrad', en: 'Efficiency' }, v: 'bis 96,5 %' },
+      { l: { de: 'Schutzart', en: 'Protection' }, v: 'IP54 / IK10, Typ-A-RCD, PAS1899' },
+      { l: { de: 'Auslegung', en: 'Design life' }, v: { de: '10 Jahre', en: '10 years' } },
+    ],
+  },
+  {
+    slug: 'xcharge-c7',
+    brand: 'XCHARGE',
+    name: 'C7 Ultra-Fast Charger',
+    recommended: false,
+    tagline: { de: 'Eichrechtskonformer Schnelllader bis 480 kW', en: 'Calibration-compliant fast charger up to 480 kW' },
+    desc: {
+      de: 'Kompakter Dual-Outlet-Schnelllader für öffentliche und gewerbliche Standorte. Eichrechtskonform nach PTB (DE) und LNE (FR), mit großem Werbedisplay und barrierefreier Bedienung — geeignet überall dort, wo auch Dritte laden sollen.',
+      en: 'Compact dual-outlet fast charger for public and commercial sites. Calibration-compliant per PTB (DE) and LNE (FR), with a large advertising display and barrier-free operation — suitable wherever third parties should also charge.',
+    },
+    fit: { de: 'Öffentliche & halböffentliche Schnellladepunkte', en: 'Public & semi-public fast-charging points' },
+    specs: [
+      { l: { de: 'Ladeleistung', en: 'Charging power' }, v: '480 kW / 600 A (max.)' },
+      { l: { de: 'Anschlüsse', en: 'Connectors' }, v: { de: '2× CCS2 (flüssig-/luftgekühlt)', en: '2× CCS2 (liquid/air-cooled)' } },
+      { l: { de: 'Spannungsbereich', en: 'Voltage range' }, v: '200–1000 V DC' },
+      { l: { de: 'Eichrecht', en: 'Calibration law' }, v: { de: 'PTB (DE) / LNE (FR) konform', en: 'PTB (DE) / LNE (FR) compliant' } },
+      { l: { de: 'Authentifizierung', en: 'Authentication' }, v: { de: 'RFID, QR, Kreditkarte, Plug & Charge', en: 'RFID, QR, credit card, Plug & Charge' } },
+      { l: { de: 'Protokolle', en: 'Protocols' }, v: 'OCPP 1.6J / 2.0.1, ISO 15118' },
+      { l: { de: 'Display', en: 'Display' }, v: { de: '13,3″ HMI + 21,5″ Werbedisplay', en: '13.3″ HMI + 21.5″ advertising screen' } },
+      { l: { de: 'Konnektivität', en: 'Connectivity' }, v: '4G/5G, Ethernet' },
+      { l: { de: 'Maße / Gewicht', en: 'Dimensions / weight' }, v: '800×900×1992 mm · ~800 kg' },
+      { l: { de: 'Temperaturbereich', en: 'Temperature range' }, v: '−25 – 50 °C' },
+      { l: { de: 'Schutzart', en: 'Protection' }, v: 'IP54 / IK10' },
+      { l: { de: 'Barrierefrei', en: 'Barrier-free' }, v: 'DIN 18040-3' },
+    ],
+  },
+];

@@ -1,0 +1,9 @@
+---
+import RegionLanding from '../../components/RegionLanding.astro';
+import { regions } from '../../data/regions.ts';
+export function getStaticPaths() {
+  return regions.map((region) => ({ params: { slug: region.slug }, props: { region } }));
+}
+const { region } = Astro.props;
+---
+<RegionLanding lang="de" region={region} />

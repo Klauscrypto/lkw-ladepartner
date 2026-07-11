@@ -1,0 +1,402 @@
+---
+import '@fontsource/space-grotesk/500.css';
+import '@fontsource/space-grotesk/600.css';
+import '@fontsource/space-grotesk/700.css';
+import '@fontsource/ibm-plex-sans/400.css';
+import '@fontsource/ibm-plex-sans/500.css';
+import '@fontsource/ibm-plex-sans/600.css';
+import '@fontsource/ibm-plex-mono/500.css';
+import '@fontsource/ibm-plex-mono/600.css';
+import '../styles/landing.css';
+import { ui, brand } from '../i18n/ui.ts';
+import { regions } from '../data/regions.ts';
+import ContactForm from './ContactForm.astro';
+
+const { lang } = Astro.props;
+const t = ui[lang];
+const SITE = 'https://lkw-ladepartner.de';
+const paths = { de: SITE + '/', en: SITE + '/en/' };
+const canonical = paths[lang];
+const OG_IMAGE = SITE + '/og-image.png';
+const homeHref = lang === 'de' ? '/' : '/en/';
+const otherLang = lang === 'de' ? 'en' : 'de';
+
+// Schema.org
+const orgSchema = {
+  "@context": "https://schema.org", "@type": "Organization",
+  name: "SOMV Project Consulting GmbH", url: SITE, logo: SITE + "/favicon.svg",
+  email: brand.email, description: t.meta.desc, areaServed: "DE", inLanguage: t.htmlLang,
+  address: { "@type": "PostalAddress", streetAddress: "Land-Au 8", postalCode: "94469", addressLocality: "Deggendorf", addressRegion: "Bayern", addressCountry: "DE" },
+  sameAs: [brand.somv, brand.trafo, brand.sep, brand.waermekraft, brand.virta],
+};
+const serviceSchema = {
+  "@context": "https://schema.org", "@type": "Service",
+  serviceType: "Truck charging infrastructure / depot electrification",
+  provider: { "@type": "Organization", name: "SOMV Project Consulting GmbH", url: SITE },
+  areaServed: { "@type": "Country", name: "Germany" }, inLanguage: t.htmlLang, description: t.meta.desc,
+  offers: { "@type": "Offer", priceCurrency: "EUR", description: t.hero.cta1 },
+};
+const faqSchema = {
+  "@context": "https://schema.org", "@type": "FAQPage", inLanguage: t.htmlLang,
+  mainEntity: t.faqBlock.items.map((f) => ({ "@type": "Question", name: f[0], acceptedAnswer: { "@type": "Answer", text: f[1] } })),
+};
+const localBusinessSchema = {
+  "@context": "https://schema.org", "@type": "LocalBusiness",
+  name: "SOMV Project Consulting GmbH", url: SITE, image: OG_IMAGE, logo: SITE + "/favicon.svg",
+  telephone: "+49 991 38314070", email: brand.email, priceRange: "€€€", inLanguage: t.htmlLang,
+  address: { "@type": "PostalAddress", streetAddress: "Land-Au 8", postalCode: "94469", addressLocality: "Deggendorf", addressRegion: "Bayern", addressCountry: "DE" },
+  geo: { "@type": "GeoCoordinates", latitude: 48.8339, longitude: 12.9575 },
+  areaServed: ["Deggendorf", "Passau", "Regensburg", "Straubing", "Landshut", "Niederbayern", "Bayern"],
+  sameAs: [brand.somv, brand.trafo, brand.sep, brand.waermekraft, brand.virta],
+};
+---
+
+<!DOCTYPE html>
+<html lang={t.htmlLang}>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{t.meta.title}</title>
+  <meta name="description" content={t.meta.desc} />
+  <link rel="canonical" href={canonical} />
+  <link rel="alternate" hreflang="de" href={paths.de} />
+  <link rel="alternate" hreflang="en" href={paths.en} />
+  <link rel="alternate" hreflang="x-default" href={paths.de} />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <meta name="theme-color" content="#10362A" />
+  <meta name="author" content="SOMV Project Consulting GmbH" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content={lang === 'de' ? 'de_DE' : 'en_GB'} />
+  <meta property="og:site_name" content="Lkw-Ladepartner · SOMV Project Consulting" />
+  <meta property="og:title" content={t.meta.title} />
+  <meta property="og:description" content={t.meta.desc} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:image" content={OG_IMAGE} />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={t.meta.title} />
+  <meta name="twitter:description" content={t.meta.desc} />
+  <meta name="twitter:image" content={OG_IMAGE} />
+  <script type="application/ld+json" set:html={JSON.stringify(orgSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(serviceSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(localBusinessSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+</head>
+<body>
+
+<a class="skip" href="#main">{lang === 'de' ? 'Zum Inhalt springen' : 'Skip to content'}</a>
+
+<header class="topbar">
+  <div class="wrap bar">
+    <a class="brand" href={homeHref}>
+      <span class="brand-mark">SOMV</span>
+      <span class="brand-sub">Project Consulting</span>
+    </a>
+    <input type="checkbox" id="navtoggle" class="nav-toggle" aria-label="Menü umschalten" />
+    <label for="navtoggle" class="hamburger" aria-hidden="true"><span></span><span></span><span></span></label>
+    <nav class="nav" aria-label="Navigation">
+      <a href="#leistungen">{t.nav.leistungen}</a>
+      <a href="#system">{t.nav.system}</a>
+      <a href={lang === 'de' ? '/ladehardware/' : '/en/charging-hardware/'}>{t.nav.hardware}</a>
+      <a href="#rechner">{t.nav.foerderung}</a>
+    </nav>
+    <div class="bar-right">
+      <div class="lang-switch" aria-label="Sprache / Language">
+        <a href="/" class={lang === 'de' ? 'on' : ''}>DE</a>
+        <span>·</span>
+        <a href="/en/" class={lang === 'en' ? 'on' : ''}>EN</a>
+      </div>
+      <span class="virta-badge">{t.nav.reseller} <strong>Virta</strong> {t.nav.resellerTail}</span>
+      <a class="btn btn-sm" href="#kontakt">{t.nav.cta}</a>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow">{t.hero.eyebrow}</p>
+        <h1>{t.hero.h1a}<br /><span class="hl">{t.hero.h1b}</span></h1>
+        <p class="lead">{t.hero.lead}</p>
+        <div class="hero-cta">
+          <a class="btn" href="#kontakt">{t.hero.cta1}</a>
+          <a class="btn btn-ghost" href="#rechner">{t.hero.cta2}</a>
+        </div>
+        <div class="hero-stats">
+          {t.hero.stats.map((s) => (<div><b>{s[0]}</b><span>{s[1]}</span></div>))}
+        </div>
+      </div>
+
+      <figure class="sld" aria-label={t.sld.caption}>
+        <figcaption>{t.sld.caption}</figcaption>
+        <div class="sld-flow">
+          {t.sld.nodes.map((node, i) => (
+            <div class="sld-node-group">
+              <div class="sld-node">
+                <span class="dot"></span>
+                <span class="sld-k">{node[0]}</span>
+                <span class="sld-v">{node[1]}</span>
+              </div>
+              {i < t.sld.nodes.length - 1 && <div class="sld-line"><span class="pulse"></span></div>}
+            </div>
+          ))}
+        </div>
+      </figure>
+    </div>
+  </section>
+
+  <!-- FÖRDER-BANNER -->
+  <section class="foerder">
+    <div class="wrap foerder-in">
+      <div class="foerder-lead">
+        <span class="pill-amber">{t.foerder.pill}</span>
+        <p set:html={t.foerder.text}></p>
+      </div>
+      <a class="btn btn-amber" href="#rechner">{t.foerder.cta}</a>
+    </div>
+  </section>
+
+  <!-- LEISTUNGEN -->
+  <section id="leistungen" class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="kicker">{t.leist.kicker}</p>
+        <h2>{t.leist.h2}</h2>
+        <p class="section-sub">{t.leist.sub}</p>
+      </div>
+      <div class="grid-leist">
+        {t.leist.items.map((l) => (
+          <article class={"lcard " + (l.who === "VIRTA" ? "is-virta" : "")}>
+            <div class="lcard-top">
+              <span class="mono-tag">{l.tag}</span>
+              <span class={"who " + (l.who === "VIRTA" ? "who-virta" : "who-somv")}>{l.who}</span>
+            </div>
+            <h3>{l.title}</h3>
+            <p>{l.text}</p>
+            {l.href && <a class="lcard-link" href={l.href} rel="noopener">{l.hrefLabel} →</a>}
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- SYSTEM -->
+  <section id="system" class="section section-dark">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="kicker kicker-light">{t.system.kicker}</p>
+        <h2 class="on-dark">{t.system.h2}</h2>
+        <p class="section-sub on-dark-sub">{t.system.sub}</p>
+      </div>
+      <div class="split">
+        <div class="split-col">
+          <div class="split-h"><span class="who who-somv">SOMV</span> {t.system.somvH}</div>
+          <ul class="ticks">{t.system.somvItems.map((i) => (<li>{i}</li>))}</ul>
+        </div>
+        <div class="split-col">
+          <div class="split-h"><span class="who who-virta">VIRTA</span> {t.system.virtaH}</div>
+          <ul class="ticks ticks-virta">{t.system.virtaItems.map((i) => (<li>{i}</li>))}</ul>
+        </div>
+      </div>
+      <div class="virta-stats">
+        <p class="virta-stats-label">{t.system.statsLabel}</p>
+        {t.system.stats.map((s) => (<div class="vstat"><b>{s[0]}</b><span>{s[1]}</span></div>))}
+      </div>
+    </div>
+  </section>
+
+  <!-- RECHNER -->
+  <section id="rechner" class="section">
+    <div class="wrap rechner-grid">
+      <div class="rechner-intro">
+        <p class="kicker">{t.rechner.kicker}</p>
+        <h2>{t.rechner.h2}</h2>
+        <p class="section-sub">{t.rechner.sub}</p>
+        <div class="calc-inputs">
+          <label class="field">
+            <span>{t.rechner.count}</span>
+            <input id="cp" type="number" min="1" max="50" value="4" />
+          </label>
+          <label class="field">
+            <span>{t.rechner.power}</span>
+            <select id="kw">
+              <option value="50">50 kW</option>
+              <option value="100">100 kW</option>
+              <option value="150" selected>150 kW</option>
+              <option value="300">300 kW</option>
+            </select>
+          </label>
+        </div>
+      </div>
+      <div class="calc-out" aria-live="polite"
+           data-unit={t.rechner.unitKw}
+           data-note-kmu={t.rechner.noteKmu}
+           data-note-unt={t.rechner.noteUnt}
+           data-note-big={t.rechner.noteBig}>
+        <div class="calc-row">
+          <span class="calc-label">{t.rechner.outPower}</span>
+          <span class="calc-val" id="outKw">600 kW</span>
+        </div>
+        <div class="calc-row calc-row-hero">
+          <span class="calc-label">{t.rechner.outGrant}</span>
+          <span class="calc-val calc-big" id="outEur">300.000 €</span>
+        </div>
+        <p class="calc-note" id="outNote">{t.rechner.noteUnt}</p>
+        <a class="btn btn-amber calc-cta" href="#kontakt">{t.rechner.cta}</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABLAUF -->
+  <section id="ablauf" class="section section-mist">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="kicker">{t.ablauf.kicker}</p>
+        <h2>{t.ablauf.h2}</h2>
+      </div>
+      <div class="steps">
+        {t.ablauf.steps.map((s) => (
+          <div class="step">
+            <span class="step-n">{s[0]}</span>
+            <div><h3>{s[1]}</h3><p>{s[2]}</p></div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ZIELGRUPPEN -->
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="kicker">{t.zielg.kicker}</p>
+        <h2>{t.zielg.h2}</h2>
+      </div>
+      <div class="grid-zg">
+        {t.zielg.items.map((z) => (<div class="zg"><h3>{z[0]}</h3><p>{z[1]}</p></div>))}
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section section-mist">
+    <div class="wrap faq-wrap">
+      <div class="section-head section-head-left">
+        <p class="kicker">{t.faqBlock.kicker}</p>
+        <h2>{t.faqBlock.h2}</h2>
+      </div>
+      <div class="faq">
+        {t.faqBlock.items.map((f) => (
+          <details class="qa"><summary>{f[0]}</summary><p>{f[1]}</p></details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- KONTAKT -->
+  <section id="kontakt" class="cta">
+    <div class="wrap cta-form">
+      <div class="cta-form-intro">
+        <p class="kicker kicker-light">{t.form.kicker}</p>
+        <h2>{t.form.h2}</h2>
+        <p>{t.form.sub}</p>
+        <div class="cta-contactinfo">
+          <a href={`mailto:${brand.email}`}>{brand.email}</a>
+          <a href="tel:+499913831470">+49 991 38314070</a>
+        </div>
+      </div>
+      <ContactForm lang={lang} />
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="wrap foot-grid">
+    <div>
+      <div class="brand"><span class="brand-mark">SOMV</span><span class="brand-sub">Project Consulting</span></div>
+      <p class="foot-note">{t.foot.note}</p>
+    </div>
+    <div class="foot-links">
+      <p class="foot-h">{t.foot.hLeist}</p>
+      <a href="#leistungen">{t.nav.leistungen}</a>
+      <a href={lang === 'de' ? '/ladehardware/' : '/en/charging-hardware/'}>{t.nav.hardware}</a>
+      <a href="#rechner">{t.foot.lRechner}</a>
+      {lang === 'de' && <a href="/blog/">Ratgeber</a>}
+    </div>
+    <div class="foot-links">
+      <p class="foot-h">{t.foot.hGruppe}</p>
+      <a href={brand.somv} rel="noopener">SOMV Project Consulting</a>
+      <a href={brand.trafo} rel="noopener">Trafo-Übergabestation</a>
+      <a href={brand.sep} rel="noopener">Solar Energie Partner</a>
+      <a href={brand.waermekraft} rel="noopener">Wärme-Kraft Heizsysteme</a>
+    </div>
+    <div class="foot-links">
+      <p class="foot-h">{t.foot.hKontakt}</p>
+      <a href={`mailto:${brand.email}`}>{brand.email}</a>
+      <a href={brand.virta} rel="noopener nofollow">{t.foot.virtaLink}</a>
+      <span class="foot-plain">{t.foot.region}</span>
+    </div>
+  </div>
+  <div class="wrap foot-regions">
+    <span class="foot-regions-h">{lang === 'de' ? 'Standorte' : 'Locations'}:</span>
+    {regions.map((rg) => (<a href={lang === 'de' ? `/standort/${rg.slug}/` : `/en/locations/${rg.slug}/`}>{rg.name}</a>))}
+  </div>
+  <div class="wrap foot-legal">
+    <span>© 2026 SOMV Project Consulting GmbH</span>
+    <span class="foot-legal-links"><a href="/impressum">{t.foot.impressum}</a> · <a href="/datenschutz">{t.foot.datenschutz}</a></span>
+  </div>
+</footer>
+
+<script>
+  const cp = document.getElementById('cp');
+  const kw = document.getElementById('kw');
+  const outKw = document.getElementById('outKw');
+  const outEur = document.getElementById('outEur');
+  const outNote = document.getElementById('outNote');
+  const box = document.querySelector('.calc-out');
+  const lang = document.documentElement.lang || 'de';
+  const nf = new Intl.NumberFormat(lang === 'en' ? 'en-GB' : 'de-DE');
+  const unit = box.dataset.unit || 'kW';
+  function money(v){ return lang === 'en' ? '€' + nf.format(v) : nf.format(v) + ' €'; }
+  function calc() {
+    let n = parseInt(cp.value, 10);
+    if (isNaN(n) || n < 1) n = 1; if (n > 50) n = 50;
+    const per = parseInt(kw.value, 10);
+    const total = n * per;
+    const grant = total * 500;
+    outKw.textContent = nf.format(total) + ' ' + unit;
+    outEur.textContent = money(grant);
+    outNote.textContent = grant > 5000000 ? box.dataset.noteBig : (grant > 1000000 ? box.dataset.noteUnt : box.dataset.noteKmu);
+  }
+  cp.addEventListener('input', calc);
+  kw.addEventListener('change', calc);
+  calc();
+</script>
+
+<style is:global>
+  .lang-switch{display:flex;align-items:center;gap:6px;font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--steel);}
+  .lang-switch a{color:var(--steel);font-weight:600;display:inline-flex;align-items:center;min-height:40px;padding:0 8px;}
+  .lang-switch a.on{color:var(--forest);text-decoration:underline;}
+  .lang-switch a:hover{color:var(--green);}
+  .foot-regions{display:flex;flex-wrap:wrap;gap:14px;align-items:center;padding:18px 0 4px;font-size:14px;}
+  .foot-regions-h{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#7fa593;}
+  .foot-regions a{color:#c7d6cd;}
+  .foot-regions a:hover{color:var(--leaf-bright);}
+  /* Kontaktbereich mit Formular */
+  .cta-form{display:grid;grid-template-columns:1fr 1.15fr;gap:44px;align-items:center;padding:64px 28px;}
+  .cta-form-intro h2{color:#fff;}
+  .cta-form-intro p{color:#bfe0cd;font-size:18px;margin-top:12px;}
+  .cta-contactinfo{display:flex;flex-direction:column;gap:6px;margin-top:22px;}
+  .cta-contactinfo a{color:#fff;font-family:'IBM Plex Mono',monospace;font-size:15px;}
+  .cta-contactinfo a:hover{color:var(--leaf-bright);}
+  @media (max-width:820px){ .cta-form{grid-template-columns:1fr;gap:28px;padding:48px 28px;} }
+  @media (max-width:560px){ .cta-form{padding:40px 18px;} }
+  @media (max-width:560px){ .lang-switch{margin-right:2px;} }
+</style>
+</body>
+</html>

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://lkw-ladepartner.de/sitemap-index.xml

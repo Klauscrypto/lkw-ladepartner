@@ -1,0 +1,215 @@
+---
+import '@fontsource/space-grotesk/500.css';
+import '@fontsource/space-grotesk/600.css';
+import '@fontsource/space-grotesk/700.css';
+import '@fontsource/ibm-plex-sans/400.css';
+import '@fontsource/ibm-plex-sans/500.css';
+import '@fontsource/ibm-plex-sans/600.css';
+import '@fontsource/ibm-plex-mono/500.css';
+import '@fontsource/ibm-plex-mono/600.css';
+import '../styles/landing.css';
+import { ui, brand } from '../i18n/ui.ts';
+import { getCollection } from 'astro:content';
+
+const { post } = Astro.props;
+const d = post.data;
+const t = ui.de;
+const SITE = 'https://lkw-ladepartner.de';
+const url = `${SITE}/blog/${post.id}/`;
+const OG_IMAGE = SITE + '/og-image.png';
+
+const all = await getCollection('blog');
+const related = d.related.map((id) => all.find((p) => p.id === id)).filter(Boolean);
+const fmtDate = new Intl.DateTimeFormat('de-DE', { day: '2-digit', month: 'long', year: 'numeric' }).format(d.pubDate);
+const isoDate = d.pubDate.toISOString();
+
+const articleSchema = {
+  "@context": "https://schema.org", "@type": "Article",
+  headline: d.title, description: d.description, inLanguage: "de",
+  datePublished: isoDate, dateModified: isoDate, image: OG_IMAGE,
+  mainEntityOfPage: { "@type": "WebPage", "@id": url },
+  author: { "@type": "Organization", name: "SOMV Project Consulting GmbH", url: SITE },
+  publisher: { "@type": "Organization", name: "SOMV Project Consulting GmbH", url: SITE, logo: { "@type": "ImageObject", url: SITE + "/favicon.svg" } },
+};
+const faqSchema = d.faq.length ? {
+  "@context": "https://schema.org", "@type": "FAQPage", inLanguage: "de",
+  mainEntity: d.faq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+} : null;
+const breadcrumb = {
+  "@context": "https://schema.org", "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Home", item: SITE + "/" },
+    { "@type": "ListItem", position: 2, name: "Ratgeber", item: SITE + "/blog/" },
+    { "@type": "ListItem", position: 3, name: d.title, item: url },
+  ],
+};
+---
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{d.title} | Ratgeber – SOMV</title>
+  <meta name="description" content={d.description} />
+  <link rel="canonical" href={url} />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <meta name="theme-color" content="#10362A" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta property="og:type" content="article" />
+  <meta property="og:locale" content="de_DE" />
+  <meta property="og:title" content={d.title} />
+  <meta property="og:description" content={d.description} />
+  <meta property="og:url" content={url} />
+  <meta property="og:image" content={OG_IMAGE} />
+  <meta name="twitter:card" content="summary_large_image" />
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+  {faqSchema && <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />}
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumb)} />
+</head>
+<body>
+
+<a class="skip" href="#main">Zum Inhalt springen</a>
+
+<header class="topbar">
+  <div class="wrap bar">
+    <a class="brand" href="/"><span class="brand-mark">SOMV</span><span class="brand-sub">Project Consulting</span></a>
+    <input type="checkbox" id="navtoggle" class="nav-toggle" aria-label="Menü umschalten" />
+    <label for="navtoggle" class="hamburger" aria-hidden="true"><span></span><span></span><span></span></label>
+    <nav class="nav" aria-label="Navigation">
+      <a href="/#leistungen">{t.nav.leistungen}</a>
+      <a href="/#system">{t.nav.system}</a>
+      <a href="/#ablauf">{t.nav.ablauf}</a>
+      <a href="/blog/">Ratgeber</a>
+    </nav>
+    <div class="bar-right">
+      <span class="virta-badge">{t.nav.reseller} <strong>Virta</strong> {t.nav.resellerTail}</span>
+      <a class="btn btn-sm" href="/#kontakt">{t.nav.cta}</a>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <article>
+    <header class="art-hero">
+      <div class="wrap art-wrap">
+        <p class="art-breadcrumb"><a href="/">Start</a> › <a href="/blog/">Ratgeber</a></p>
+        {d.cluster && <span class="art-cluster">{d.cluster}</span>}
+        <h1>{d.title}</h1>
+        <p class="art-lede">{d.description}</p>
+        <p class="art-date">Aktualisiert am {fmtDate}</p>
+      </div>
+    </header>
+
+    <div class="wrap art-wrap">
+      <div class="article-body">
+        <slot />
+      </div>
+
+      {d.faq.length > 0 && (
+        <section class="art-faq">
+          <h2>Häufige Fragen</h2>
+          <div class="faq">
+            {d.faq.map((f) => (<details class="qa"><summary>{f.q}</summary><p>{f.a}</p></details>))}
+          </div>
+        </section>
+      )}
+
+      {related.length > 0 && (
+        <section class="art-related">
+          <h2>Weiterlesen</h2>
+          <div class="related-grid">
+            {related.map((rp) => (
+              <a class="related-card" href={`/blog/${rp.id}/`}>
+                {rp.data.cluster && <span class="rc-cluster">{rp.data.cluster}</span>}
+                <span class="rc-title">{rp.data.title}</span>
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
+    </div>
+
+    <section id="kontakt" class="cta">
+      <div class="wrap cta-in">
+        <div>
+          <h2>{t.ctaBlock.h2}</h2>
+          <p>{t.ctaBlock.text}</p>
+        </div>
+        <div class="cta-actions">
+          <a class="btn btn-amber btn-lg" href={`mailto:${brand.email}?subject=${encodeURIComponent(t.ctaBlock.mailSubject)}`}>{t.ctaBlock.cta1}</a>
+          <a class="btn btn-ghost-light btn-lg" href="/#rechner">{t.hero.cta2}</a>
+        </div>
+      </div>
+    </section>
+  </article>
+</main>
+
+<footer class="footer">
+  <div class="wrap foot-grid">
+    <div>
+      <div class="brand"><span class="brand-mark">SOMV</span><span class="brand-sub">Project Consulting</span></div>
+      <p class="foot-note">{t.foot.note}</p>
+    </div>
+    <div class="foot-links">
+      <p class="foot-h">{t.foot.hLeist}</p>
+      <a href="/#leistungen">{t.nav.leistungen}</a>
+      <a href="/blog/">Ratgeber</a>
+      <a href="/#rechner">{t.foot.lRechner}</a>
+    </div>
+    <div class="foot-links">
+      <p class="foot-h">{t.foot.hGruppe}</p>
+      <a href={brand.somv} rel="noopener">SOMV Project Consulting</a>
+      <a href={brand.trafo} rel="noopener">Trafo-Übergabestation</a>
+      <a href={brand.sep} rel="noopener">Solar Energie Partner</a>
+    </div>
+    <div class="foot-links">
+      <p class="foot-h">{t.foot.hKontakt}</p>
+      <a href={`mailto:${brand.email}`}>{brand.email}</a>
+      <span class="foot-plain">{t.foot.region}</span>
+    </div>
+  </div>
+  <div class="wrap foot-legal">
+    <span>© 2026 SOMV Project Consulting GmbH</span>
+    <span class="foot-legal-links"><a href="/impressum">{t.foot.impressum}</a> · <a href="/datenschutz">{t.foot.datenschutz}</a></span>
+  </div>
+</footer>
+
+<style is:global>
+  .art-hero{background:radial-gradient(900px 380px at 80% -10%, rgba(43,138,99,.10), transparent 60%), var(--paper);
+    padding:48px 0 30px;border-bottom:1px solid var(--line);}
+  .art-wrap{max-width:760px;}
+  .art-breadcrumb{font-size:13px;color:var(--steel);font-family:'IBM Plex Mono',monospace;margin-bottom:16px;}
+  .art-breadcrumb a{color:var(--green);}
+  .art-cluster{display:inline-block;background:#e2efe6;color:var(--green);font-size:12px;font-weight:700;
+    padding:5px 12px;border-radius:100px;font-family:'IBM Plex Mono',monospace;margin-bottom:16px;}
+  .art-hero h1{font-size:clamp(28px,4vw,40px);line-height:1.12;letter-spacing:-.6px;}
+  .art-lede{font-size:19px;color:var(--steel);margin-top:16px;}
+  .art-date{font-size:13px;color:var(--steel);margin-top:14px;font-family:'IBM Plex Mono',monospace;}
+
+  .article-body{padding:36px 0 10px;}
+  .article-body h2{font-family:'Space Grotesk',sans-serif;font-size:25px;color:var(--forest);font-weight:700;
+    margin:38px 0 12px;letter-spacing:-.4px;}
+  .article-body h3{font-family:'Space Grotesk',sans-serif;font-size:19px;color:var(--ink);margin:24px 0 8px;}
+  .article-body p{font-size:17.5px;line-height:1.7;color:var(--ink-soft);margin:14px 0;}
+  .article-body ul,.article-body ol{margin:14px 0 16px 4px;padding-left:22px;}
+  .article-body li{font-size:17.5px;line-height:1.65;color:var(--ink-soft);margin:8px 0;}
+  .article-body a{color:var(--green);text-decoration:underline;text-underline-offset:2px;}
+  .article-body a:hover{color:var(--leaf);}
+  .article-body strong{color:var(--ink);font-weight:600;}
+  .article-body em{color:var(--steel);}
+
+  .art-faq{margin-top:44px;padding-top:30px;border-top:1px solid var(--line);}
+  .art-faq h2{font-family:'Space Grotesk',sans-serif;font-size:24px;color:var(--forest);margin-bottom:16px;}
+  .art-related{margin:44px 0 10px;}
+  .art-related h2{font-family:'Space Grotesk',sans-serif;font-size:22px;color:var(--ink);margin-bottom:16px;}
+  .related-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .related-card{display:flex;flex-direction:column;gap:8px;background:var(--mist);border:1px solid var(--line);
+    border-radius:12px;padding:20px;transition:transform .15s ease;}
+  .related-card:hover{transform:translateY(-2px);}
+  .rc-cluster{font-size:11px;font-family:'IBM Plex Mono',monospace;color:var(--green);}
+  .rc-title{font-family:'Space Grotesk',sans-serif;font-weight:700;color:var(--ink);font-size:17px;line-height:1.3;}
+  @media (max-width:620px){ .related-grid{grid-template-columns:1fr;} }
+</style>
+</body>
+</html>

@@ -1,0 +1,135 @@
+---
+import '@fontsource/space-grotesk/500.css';
+import '@fontsource/space-grotesk/600.css';
+import '@fontsource/space-grotesk/700.css';
+import '@fontsource/ibm-plex-sans/400.css';
+import '@fontsource/ibm-plex-sans/500.css';
+import '@fontsource/ibm-plex-sans/600.css';
+import '@fontsource/ibm-plex-mono/500.css';
+import '../../styles/landing.css';
+import { ui, brand } from '../../i18n/ui.ts';
+import { getCollection } from 'astro:content';
+
+const t = ui.de;
+const SITE = 'https://lkw-ladepartner.de';
+const posts = (await getCollection('blog')).sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+const fmt = (dt) => new Intl.DateTimeFormat('de-DE', { day: '2-digit', month: 'short', year: 'numeric' }).format(dt);
+---
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ratgeber Lkw-Ladeinfrastruktur | Förderung, Kosten & Technik – SOMV</title>
+  <meta name="description" content="Praxiswissen zu Lkw-Ladeinfrastruktur und Depotladen: Förderung, Kosten, Netzanschluss und der Ablauf eines Ladeprojekts auf dem Betriebshof." />
+  <link rel="canonical" href={SITE + '/blog/'} />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <meta name="theme-color" content="#10362A" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Ratgeber Lkw-Ladeinfrastruktur – SOMV" />
+  <meta property="og:description" content="Praxiswissen zu Förderung, Kosten und Technik des Lkw-Depotladens." />
+  <meta property="og:url" content={SITE + '/blog/'} />
+  <meta property="og:image" content={SITE + '/og-image.png'} />
+</head>
+<body>
+
+<a class="skip" href="#main">Zum Inhalt springen</a>
+
+<header class="topbar">
+  <div class="wrap bar">
+    <a class="brand" href="/"><span class="brand-mark">SOMV</span><span class="brand-sub">Project Consulting</span></a>
+    <input type="checkbox" id="navtoggle" class="nav-toggle" aria-label="Menü umschalten" />
+    <label for="navtoggle" class="hamburger" aria-hidden="true"><span></span><span></span><span></span></label>
+    <nav class="nav" aria-label="Navigation">
+      <a href="/#leistungen">{t.nav.leistungen}</a>
+      <a href="/#system">{t.nav.system}</a>
+      <a href="/#ablauf">{t.nav.ablauf}</a>
+      <a href="/blog/">Ratgeber</a>
+    </nav>
+    <div class="bar-right">
+      <span class="virta-badge">{t.nav.reseller} <strong>Virta</strong> {t.nav.resellerTail}</span>
+      <a class="btn btn-sm" href="/#kontakt">{t.nav.cta}</a>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <section class="hero" style="padding:56px 0 30px;">
+    <div class="wrap">
+      <p class="eyebrow">Ratgeber</p>
+      <h1 style="max-width:760px;">Wissen rund um <span class="hl">Lkw-Ladeinfrastruktur</span></h1>
+      <p class="lead" style="max-width:600px;">Förderung, Kosten, Netzanschluss und Ablauf — kompakt erklärt für Fuhrparks, die aufs Depotladen umstellen.</p>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:40px;">
+    <div class="wrap">
+      <div class="blog-grid">
+        {posts.map((p) => (
+          <a class="blog-card" href={`/blog/${p.id}/`}>
+            {p.data.cluster && <span class="bc-cluster">{p.data.cluster}</span>}
+            <h2>{p.data.title}</h2>
+            <p>{p.data.description}</p>
+            <span class="bc-meta">{fmt(p.data.pubDate)} · Lesen →</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section id="kontakt" class="cta">
+    <div class="wrap cta-in">
+      <div><h2>{t.ctaBlock.h2}</h2><p>{t.ctaBlock.text}</p></div>
+      <div class="cta-actions">
+        <a class="btn btn-amber btn-lg" href={`mailto:${brand.email}?subject=${encodeURIComponent(t.ctaBlock.mailSubject)}`}>{t.ctaBlock.cta1}</a>
+        <a class="btn btn-ghost-light btn-lg" href="/#rechner">{t.hero.cta2}</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="wrap foot-grid">
+    <div>
+      <div class="brand"><span class="brand-mark">SOMV</span><span class="brand-sub">Project Consulting</span></div>
+      <p class="foot-note">{t.foot.note}</p>
+    </div>
+    <div class="foot-links">
+      <p class="foot-h">{t.foot.hLeist}</p>
+      <a href="/#leistungen">{t.nav.leistungen}</a>
+      <a href="/blog/">Ratgeber</a>
+      <a href="/#rechner">{t.foot.lRechner}</a>
+    </div>
+    <div class="foot-links">
+      <p class="foot-h">{t.foot.hGruppe}</p>
+      <a href={brand.somv} rel="noopener">SOMV Project Consulting</a>
+      <a href={brand.trafo} rel="noopener">Trafo-Übergabestation</a>
+      <a href={brand.sep} rel="noopener">Solar Energie Partner</a>
+    </div>
+    <div class="foot-links">
+      <p class="foot-h">{t.foot.hKontakt}</p>
+      <a href={`mailto:${brand.email}`}>{brand.email}</a>
+      <span class="foot-plain">{t.foot.region}</span>
+    </div>
+  </div>
+  <div class="wrap foot-legal">
+    <span>© 2026 SOMV Project Consulting GmbH</span>
+    <span class="foot-legal-links"><a href="/impressum">{t.foot.impressum}</a> · <a href="/datenschutz">{t.foot.datenschutz}</a></span>
+  </div>
+</footer>
+
+<style is:global>
+  .blog-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+  .blog-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:28px;
+    transition:transform .15s ease,box-shadow .2s ease;display:flex;flex-direction:column;gap:10px;}
+  .blog-card:hover{transform:translateY(-3px);box-shadow:0 22px 44px -30px rgba(16,54,42,.4);}
+  .bc-cluster{font-size:11px;font-family:'IBM Plex Mono',monospace;color:var(--green);font-weight:600;letter-spacing:.5px;}
+  .blog-card h2{font-family:'Space Grotesk',sans-serif;font-size:21px;color:var(--ink);line-height:1.2;letter-spacing:-.3px;}
+  .blog-card p{font-size:15.5px;color:var(--ink-soft);line-height:1.5;flex:1;}
+  .bc-meta{font-size:13px;font-family:'IBM Plex Mono',monospace;color:var(--steel);}
+  @media (max-width:700px){ .blog-grid{grid-template-columns:1fr;} }
+</style>
+</body>
+</html>

@@ -1,0 +1,87 @@
+# Erzeugt zeitgesteuert einen Blog-Artikel und öffnet ihn als PULL REQUEST zur Freigabe.
+# Es wird NICHT automatisch deployed — der Deploy passiert erst, wenn du den PR nach main mergst
+# (dann greift deploy.yml). So gehen keine automatisch generierten Texte ungeprüft live.
+#
+# Benötigte Secrets:  ANTHROPIC_API_KEY
+# Optionale Variable:  BLOG_MODEL (Default: claude-sonnet-5)
+#
+# WICHTIG (einmalig): Settings → Actions → General → Workflow permissions →
+#   "Allow GitHub Actions to create and approve pull requests" aktivieren.
+
+name: Blog-Entwurf per Pull Request
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'      # jeden Montag 06:00 UTC
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: 'Wie viele neue Artikel generieren'
+        default: '1'
+      force:
+        description: 'Vorhandene überschreiben (true/false)'
+        default: 'false'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: blog-autodraft
+  cancel-in-progress: false
+
+jobs:
+  draft:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Node einrichten
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Abhängigkeiten installieren
+        run: |
+          npm ci
+          pip install anthropic
+
+      - name: Artikel generieren
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          BLOG_MODEL: ${{ vars.BLOG_MODEL }}
+        run: |
+          python scripts/blog_generator.py \
+            --limit "${{ github.event.inputs.limit || '1' }}" \
+            ${{ github.event.inputs.force == 'true' && '--force' || '' }}
+
+      - name: Seite bauen (validiert den neuen Artikel)
+        run: npm run build
+
+      - name: Pull Request öffnen
+        uses: peter-evans/create-pull-request@v6
+        with:
+          add-paths: src/content/blog
+          branch: blog/auto-draft
+          delete-branch: true
+          commit-message: "content(blog): neuer Artikel-Entwurf (automatisch)"
+          title: "Blog-Entwurf: neuer Artikel zur Freigabe"
+          labels: |
+            blog
+            automatisch
+          body: |
+            Automatisch erzeugter Artikel-Entwurf. **Vor dem Merge bitte prüfen:**
+
+            - [ ] Förder- und Fristangaben gegen den aktuellen BMV-Aufruf gegengelesen
+            - [ ] Interne Links funktionieren, Ton/Marke passen
+            - [ ] Titel, Meta-Description und Keyword sinnvoll
+            - [ ] FAQ inhaltlich korrekt
+
+            Nach dem Merge nach `main` deployt `deploy.yml` die Seite automatisch auf Hetzner.

@@ -1,0 +1,144 @@
+{
+  "_comment": "Warteschlange für den Blog-Generator. Jeder Eintrag wird zu src/content/blog/<slug>.md. Vorhandene Slugs werden übersprungen (ausser --force). Neue Themen einfach hier ergänzen.",
+  "defaults": {
+    "target_words": 900,
+    "internal_links_global": [
+      ["/#rechner", "Förderrechner auf der Startseite"],
+      ["/#kontakt", "kostenlose Standortanalyse"],
+      ["https://trafo-uebergabestation.de", "Trafo-Übergabestation"]
+    ]
+  },
+  "topics": [
+    {
+      "slug": "e-lkw-wirtschaftlichkeit-tco-vergleich",
+      "title": "E-Lkw wirtschaftlich? TCO im Vergleich zu Diesel",
+      "keyword": "e-lkw wirtschaftlichkeit",
+      "cluster": "Förderung & Wirtschaftlichkeit",
+      "intent": "informational",
+      "target_words": 1300,
+      "outline": [
+        "Was die Gesamtkosten (TCO) eines Lkw ausmachen",
+        "Anschaffung: Aufpreis E-Lkw vs. Diesel",
+        "Energiekosten: Strom vs. Diesel",
+        "Maut, Förderung und Betriebskosten",
+        "Der Break-even: ab wann rechnet sich der Umstieg",
+        "Die Rolle der eigenen Ladeinfrastruktur",
+        "Fazit"
+      ],
+      "internal_links": [
+        ["/blog/depotladen-kosten-wirtschaftlichkeit/", "Depotladen-Kosten"],
+        ["/blog/lkw-ladeinfrastruktur-foerderung-2026/", "Förderung"]
+      ],
+      "related": ["depotladen-kosten-wirtschaftlichkeit", "lkw-ladeinfrastruktur-foerderung-2026"]
+    },
+    {
+      "slug": "mcs-vs-ccs-ladestandards-lkw",
+      "title": "MCS vs. CCS: Ladestandards für E-Lkw erklärt",
+      "keyword": "mcs laden lkw",
+      "cluster": "Technik & Infrastruktur",
+      "intent": "informational",
+      "target_words": 1000,
+      "outline": [
+        "Warum Ladestandards für Lkw wichtig sind",
+        "CCS: der heutige Standard",
+        "MCS (Megawatt Charging System): ab wann und wofür",
+        "Leistungsklassen im Vergleich",
+        "Was das für die Depotplanung bedeutet (MCS-ready)",
+        "Fazit"
+      ],
+      "internal_links": [
+        ["/#leistungen", "unsere Leistungen"],
+        ["/blog/depotladen-kosten-wirtschaftlichkeit/", "Depotladen-Kosten"]
+      ],
+      "related": ["depotladen-kosten-wirtschaftlichkeit", "vier-schritte-lkw-ladeinfrastruktur"]
+    },
+    {
+      "slug": "photovoltaik-betriebshof-lkw-laden",
+      "title": "PV auf dem Betriebshof: Lkw mit eigenem Solarstrom laden",
+      "keyword": "photovoltaik lkw laden",
+      "cluster": "Technik & Infrastruktur",
+      "intent": "informational",
+      "target_words": 1100,
+      "outline": [
+        "Warum PV am Ladestandort sinnvoll ist",
+        "Flächenpotenzial: Dach und Parkplatz (Solar-Carport)",
+        "Eigenverbrauch: Solarstrom direkt in die Flotte",
+        "Kombination mit Batteriespeicher",
+        "Wirtschaftlichkeit und Förderung",
+        "Fazit"
+      ],
+      "internal_links": [
+        ["https://solar-energie-partner.de", "Solar Energie Partner"],
+        ["/#rechner", "Förderrechner"]
+      ],
+      "related": ["depotladen-kosten-wirtschaftlichkeit", "netzanschluss-ladepark-engpass"]
+    },
+    {
+      "slug": "lastmanagement-batteriespeicher-ladepark",
+      "title": "Lastmanagement & Batteriespeicher: Lastspitzen kappen",
+      "keyword": "lastmanagement ladepark",
+      "cluster": "Technik & Infrastruktur",
+      "intent": "informational",
+      "target_words": 1000,
+      "outline": [
+        "Das Problem: Lastspitzen und Netzentgelte",
+        "Statisches vs. dynamisches Lastmanagement",
+        "Peak-Shaving mit Batteriespeicher",
+        "Zusammenspiel mit PV und Netzanschluss",
+        "Ein Rechenbeispiel",
+        "Fazit"
+      ],
+      "internal_links": [
+        ["/#leistungen", "unsere Leistungen"],
+        ["/blog/netzanschluss-ladepark-engpass/", "Netzanschluss als Engpass"]
+      ],
+      "related": ["netzanschluss-ladepark-engpass", "photovoltaik-betriebshof-lkw-laden"]
+    },
+    {
+      "slug": "ladeinfrastruktur-spedition-praxisleitfaden",
+      "title": "Ladeinfrastruktur für Speditionen: Praxisleitfaden",
+      "keyword": "ladeinfrastruktur spedition",
+      "cluster": "Praxis & Zielgruppen",
+      "intent": "kommerziell",
+      "target_words": 1300,
+      "outline": [
+        "Ausgangslage: Spedition auf dem Weg zur E-Flotte",
+        "Flottenanalyse: welche Fahrzeuge, welche Touren",
+        "Tourplanung und Standzeiten als Basis",
+        "Dimensionierung der Ladeinfrastruktur",
+        "Skalierung in Ausbaustufen",
+        "Förderung und Wirtschaftlichkeit",
+        "Fazit"
+      ],
+      "internal_links": [
+        ["/#kontakt", "kostenlose Standortanalyse"],
+        ["/blog/depotladen-kosten-wirtschaftlichkeit/", "Depotladen-Kosten"],
+        ["/standort/deggendorf/", "Standort Niederbayern"]
+      ],
+      "related": ["depotladen-kosten-wirtschaftlichkeit", "vier-schritte-lkw-ladeinfrastruktur"]
+    },
+    {
+      "slug": "depotladen-niederbayern-regionale-loesungen",
+      "title": "Depotladen in Niederbayern: regionale Lösungen",
+      "keyword": "lkw laden niederbayern",
+      "cluster": "Praxis & Zielgruppen",
+      "intent": "lokal",
+      "target_words": 900,
+      "outline": [
+        "Warum der regionale Bezug zählt",
+        "Standorte von Deggendorf bis Landshut",
+        "Lokale Netzbetreiber und Besonderheiten",
+        "Ihr Ansprechpartner vor Ort",
+        "Fazit"
+      ],
+      "internal_links": [
+        ["/standort/deggendorf/", "Deggendorf"],
+        ["/standort/passau/", "Passau"],
+        ["/standort/regensburg/", "Regensburg"],
+        ["/standort/straubing/", "Straubing"],
+        ["/standort/landshut/", "Landshut"]
+      ],
+      "related": ["vier-schritte-lkw-ladeinfrastruktur", "depotladen-kosten-wirtschaftlichkeit"]
+    }
+  ]
+}
