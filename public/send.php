@@ -3,11 +3,13 @@
  * Kontaktformular-Handler für lkw-ladepartner.de
  * -----------------------------------------------
  * DSGVO-arm: verarbeitet nur die eingegebenen Felder, keine Cookies, kein Logging
- * personenbezogener Daten. Versendet die Anfrage per E-Mail an das Postfach.
+ * personenbezogener Daten. Versendet die Anfrage per SMTP (Microsoft 365) an das Postfach.
  *
- * Anpassen: $to (Empfänger) und $from (muss eine Adresse der eigenen Domain sein,
- * sonst landet die Mail im Spam). Server muss PHP mail() bzw. SMTP bereitstellen.
+ * SMTP-Zugangsdaten liegen außerhalb des Webroots in /etc/lkw-ladepartner/smtp.env
+ * (nur von www-data lesbar), nicht im Git-Repo.
  */
+
+require __DIR__ . '/smtp_mailer.php';
 
 header('Content-Type: application/json; charset=utf-8');
 
@@ -18,9 +20,21 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
+// --- SMTP-Konfiguration laden ---
+$envPath = '/etc/lkw-ladepartner/smtp.env';
+if (!is_readable($envPath)) {
+    http_response_code(500);
+    echo json_encode(['ok' => false, 'error' => 'mail_not_configured']);
+    exit;
+}
+$env = parse_ini_file($envPath);
+$smtpHost = $env['SMTP_HOST'] ?? '';
+$smtpPort = (int) ($env['SMTP_PORT'] ?? 587);
+$smtpUser = $env['SMTP_USER'] ?? '';
+$smtpPass = $env['SMTP_PASS'] ?? '';
+
 // --- Konfiguration ---
-$to   = 'info@somv-project.de';
-$from = 'website@lkw-ladepartner.de';   // Absenderadresse der eigenen Domain
+$to = 'info@somv-project.de';
 
 // --- Eingaben einlesen ---
 function field($k) { return isset($_POST[$k]) ? trim((string) $_POST[$k]) : ''; }
@@ -78,16 +92,19 @@ $body .= "Telefon: {$phone}\n";
 $body .= "Sprache: {$lang}\n\n";
 $body .= "Nachricht:\n{$message}\n";
 
-$headers  = "From: SOMV Website <{$from}>\r\n";
-$headers .= "Reply-To: {$name} <{$email}>\r\n";
-$headers .= "Content-Type: text/plain; charset=utf-8\r\n";
-$headers .= "X-Mailer: PHP/lkw-ladepartner\r\n";
-
-$sent = @mail($to, '=?UTF-8?B?' . base64_encode($subject) . '?=', $body, $headers);
-
-if ($sent) {
+try {
+    $mailer = new SmtpMailer($smtpHost, $smtpPort, $smtpUser, $smtpPass);
+    $mailer->send(
+        from: $smtpUser,
+        fromName: 'SOMV Website',
+        to: $to,
+        replyTo: "{$name} <{$email}>",
+        subject: $subject,
+        body: $body
+    );
     echo json_encode(['ok' => true]);
-} else {
+} catch (Throwable $e) {
+    error_log('send.php SMTP-Fehler: ' . $e->getMessage());
     http_response_code(500);
     echo json_encode(['ok' => false, 'error' => 'send_failed']);
 }
