@@ -13,6 +13,7 @@ export const hardwareUi = {
     ctaText: 'Wir empfehlen die Hardware nach Ihrer Flotte, den Standzeiten und dem Netzanschluss.',
     cta: 'Beratung anfragen',
     recommended: 'Empfehlung fürs Depot',
+    datasheet: 'Datenblatt (PDF)',
   },
   en: {
     eyebrow: 'Charging hardware',
@@ -25,6 +26,7 @@ export const hardwareUi = {
     ctaText: 'We recommend the hardware based on your fleet, dwell times and grid connection.',
     cta: 'Request advice',
     recommended: 'Recommended for depots',
+    datasheet: 'Datasheet (PDF)',
   },
 };
 
@@ -35,6 +37,7 @@ export const hardware = [
     brand: 'Zebra Electronics',
     name: 'BOOST-E (BST-Serie)',
     recommended: true,
+    datasheet: '/datenblaetter/zebra-boost-e-datenblatt.pdf',
     tagline: { de: 'Verteilte Ultraschnell-Ladelösung für Flotten', en: 'Distributed ultra-fast charging for fleets' },
     desc: {
       de: 'Verteiltes System aus einer flüssiggekühlten Leistungseinheit (Huawei FusionCharge) und mehreren Ladesäulen. Eine Einheit versorgt bis zu 6 Säulen bzw. 12 Fahrzeuge gleichzeitig und verteilt die Leistung dynamisch dorthin, wo sie gebraucht wird — ideal für Betriebshöfe mit vielen Fahrzeugen und in Kombination mit PV und Speicher.',
@@ -61,6 +64,7 @@ export const hardware = [
     brand: 'XCHARGE',
     name: 'C7 Ultra-Fast Charger',
     recommended: false,
+    datasheet: '/datenblaetter/xcharge-c7-datenblatt.pdf',
     tagline: { de: 'Eichrechtskonformer Schnelllader bis 480 kW', en: 'Calibration-compliant fast charger up to 480 kW' },
     desc: {
       de: 'Kompakter Dual-Outlet-Schnelllader für öffentliche und gewerbliche Standorte. Eichrechtskonform nach PTB (DE) und LNE (FR), mit großem Werbedisplay und barrierefreier Bedienung — geeignet überall dort, wo auch Dritte laden sollen.',

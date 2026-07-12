@@ -126,9 +126,9 @@ Der Webserver muss **PHP** für `send.php` bereitstellen; in `send.php` die Abse
 - [ ] Google-Unternehmensprofil (Text liegt separat als `Google-Unternehmensprofil_Texte.md`).
 - [ ] Impressum ist mit echten Daten befüllt; **Datenschutz anwaltlich prüfen** (Hinweis-Box entfernen, wenn erledigt).
 - [ ] „Offizieller Virta Reseller"-Wording erst nach Vertrag freischalten.
-- [ ] Partner-Freigabe für XCHARGE/Zebra (Markennennung, Bilder, Datenblatt-Download) klären.
-- [ ] „Datenblatt anfordern"-Button bzw. echte Datenblatt-PDFs auf der Hardware-Seite (nach Freigabe).
-- [ ] `send.php`: Absenderadresse setzen; ggf. auf SMTP/Transaktionsmailer umstellen.
+- [x] Partner-Freigabe für XCHARGE/Zebra (Markennennung, Bilder, Datenblatt-Download) erteilt.
+- [x] Echte Datenblatt-PDFs auf der Hardware-Seite (`public/datenblaetter/`, verlinkt aus `HardwareLanding.astro`).
+- [x] `send.php`: auf SMTP (Microsoft 365) umgestellt; Passwort steht noch aus (siehe Deployment-Hinweis unten).
 - [ ] Restliche 6 Blog-Artikel per Skript generieren; EN-Impressum/Datenschutz optional.
 - [ ] Optional: DSGVO-freundliches Analytics (Plausible/Matomo), Lighthouse-/Link-Check im PR.
 - [ ] Echte Projektfotos (WebP, Alt-Texte) statt CSS-Grafik; Case Study nach Projekt 1.
