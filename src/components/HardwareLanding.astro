@@ -50,6 +50,7 @@ const productSchema = hardware.map((p) => ({
   <meta property="og:url" content={canonical} />
   <meta property="og:image" content={SITE + '/og-image.png'} />
   {productSchema.map((s) => (<script type="application/ld+json" set:html={JSON.stringify(s)} />))}
+<script is:inline src="/analytics.js" defer data-ga="G-XXXXXXXXXX" data-umami="00000000-0000-0000-0000-000000000000" data-umami-src="https://stats.pilsner-vertrieb.de/script.js" data-privacy="/datenschutz" data-accent="#16a34a"></script>
 </head>
 <body>
 
@@ -156,7 +157,7 @@ const productSchema = hardware.map((p) => ({
   </div>
   <div class="wrap foot-legal">
     <span>© 2026 SOMV Project Consulting GmbH</span>
-    <span class="foot-legal-links"><a href="/impressum">{t.foot.impressum}</a> · <a href="/datenschutz">{t.foot.datenschutz}</a></span>
+    <span class="foot-legal-links"><a href="/impressum">{t.foot.impressum}</a> · <a href="/datenschutz">{t.foot.datenschutz}</a> · <a href="#" data-consent-open>Cookies</a></span>
   </div>
 </footer>
 

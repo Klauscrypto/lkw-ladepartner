@@ -17,6 +17,7 @@ const SITE = 'https://lkw-ladepartner.de';
   <link rel="canonical" href={SITE + Astro.url.pathname} />
   <meta name="theme-color" content="#10362A" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<script is:inline src="/analytics.js" defer data-ga="G-XXXXXXXXXX" data-umami="00000000-0000-0000-0000-000000000000" data-umami-src="https://stats.pilsner-vertrieb.de/script.js" data-privacy="/datenschutz" data-accent="#16a34a"></script>
 </head>
 <body>
   <header class="lhead">
@@ -32,7 +33,7 @@ const SITE = 'https://lkw-ladepartner.de';
   </main>
 
   <footer class="lfoot">
-    <div class="lwrap">© 2026 SOMV Project Consulting GmbH · <a href="/impressum">Impressum</a> · <a href="/datenschutz">Datenschutz</a></div>
+    <div class="lwrap">© 2026 SOMV Project Consulting GmbH · <a href="/impressum">Impressum</a> · <a href="/datenschutz">Datenschutz</a> · <a href="#" data-consent-open>Cookies</a></div>
   </footer>
 
   <style is:global>

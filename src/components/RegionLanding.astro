@@ -68,6 +68,7 @@ const breadcrumb = {
   <meta name="twitter:card" content="summary_large_image" />
   <script type="application/ld+json" set:html={JSON.stringify(localBusiness)} />
   <script type="application/ld+json" set:html={JSON.stringify(breadcrumb)} />
+<script is:inline src="/analytics.js" defer data-ga="G-XXXXXXXXXX" data-umami="00000000-0000-0000-0000-000000000000" data-umami-src="https://stats.pilsner-vertrieb.de/script.js" data-privacy="/datenschutz" data-accent="#16a34a"></script>
 </head>
 <body>
 
@@ -185,7 +186,7 @@ const breadcrumb = {
   </div>
   <div class="wrap foot-legal">
     <span>© 2026 SOMV Project Consulting GmbH</span>
-    <span class="foot-legal-links"><a href="/impressum">{t.foot.impressum}</a> · <a href="/datenschutz">{t.foot.datenschutz}</a></span>
+    <span class="foot-legal-links"><a href="/impressum">{t.foot.impressum}</a> · <a href="/datenschutz">{t.foot.datenschutz}</a> · <a href="#" data-consent-open>Cookies</a></span>
   </div>
 </footer>
 

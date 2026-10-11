@@ -32,6 +32,7 @@ const fmt = (dt) => new Intl.DateTimeFormat('de-DE', { day: '2-digit', month: 's
   <meta property="og:description" content="Praxiswissen zu Förderung, Kosten und Technik des Lkw-Depotladens." />
   <meta property="og:url" content={SITE + '/blog/'} />
   <meta property="og:image" content={SITE + '/og-image.png'} />
+<script is:inline src="/analytics.js" defer data-ga="G-XXXXXXXXXX" data-umami="00000000-0000-0000-0000-000000000000" data-umami-src="https://stats.pilsner-vertrieb.de/script.js" data-privacy="/datenschutz" data-accent="#16a34a"></script>
 </head>
 <body>
 
@@ -116,7 +117,7 @@ const fmt = (dt) => new Intl.DateTimeFormat('de-DE', { day: '2-digit', month: 's
   </div>
   <div class="wrap foot-legal">
     <span>© 2026 SOMV Project Consulting GmbH</span>
-    <span class="foot-legal-links"><a href="/impressum">{t.foot.impressum}</a> · <a href="/datenschutz">{t.foot.datenschutz}</a></span>
+    <span class="foot-legal-links"><a href="/impressum">{t.foot.impressum}</a> · <a href="/datenschutz">{t.foot.datenschutz}</a> · <a href="#" data-consent-open>Cookies</a></span>
   </div>
 </footer>
 
