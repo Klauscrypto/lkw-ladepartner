@@ -24,6 +24,19 @@ class SmtpMailer
         $this->pass = $pass;
     }
 
+    /** Adresse mit sicher kodiertem Anzeigenamen: "Name" <a@b.de> bzw. =?UTF-8?B?…?= <a@b.de> */
+    public static function address(string $email, string $name = ''): string
+    {
+        $name = str_replace(["\r", "\n"], ' ', $name);
+        if ($name === '') {
+            return "<{$email}>";
+        }
+        if (preg_match('/^[\x20-\x7E]*$/', $name)) {
+            return '"' . addcslashes($name, "\"\\") . "\" <{$email}>";
+        }
+        return '=?UTF-8?B?' . base64_encode($name) . "?= <{$email}>";
+    }
+
     /** @throws RuntimeException */
     public function send(string $from, string $fromName, string $to, string $replyTo, string $subject, string $body): void
     {
@@ -55,15 +68,21 @@ class SmtpMailer
             $this->command($socket, "RCPT TO:<{$to}>", 250);
             $this->command($socket, "DATA", 354);
 
-            $headers  = "From: =?UTF-8?B?" . base64_encode($fromName) . "?= <{$from}>\r\n";
+            $domain   = substr(strrchr($from, '@'), 1) ?: 'lkw-ladepartner.de';
+            $headers  = "Date: " . date(DATE_RFC2822) . "\r\n";
+            $headers .= "Message-ID: <" . bin2hex(random_bytes(16)) . "@{$domain}>\r\n";
+            $headers .= "From: =?UTF-8?B?" . base64_encode($fromName) . "?= <{$from}>\r\n";
             $headers .= "To: <{$to}>\r\n";
             $headers .= "Reply-To: {$replyTo}\r\n";
             $headers .= "Subject: =?UTF-8?B?" . base64_encode($subject) . "?=\r\n";
+            $headers .= "MIME-Version: 1.0\r\n";
             $headers .= "Content-Type: text/plain; charset=utf-8\r\n";
+            $headers .= "Content-Transfer-Encoding: base64\r\n";
             $headers .= "X-Mailer: lkw-ladepartner-contact-form\r\n";
 
-            // Zeilen, die mit "." beginnen, escapen (SMTP-DATA-Terminator)
-            $escapedBody = preg_replace('/^\./m', '..', $body);
+            // Body als Base64 mit CRLF-Zeilen à 76 Zeichen: keine überlangen Zeilen, keine
+            // Probleme mit Umlauten oder Zeilen, die mit "." beginnen
+            $escapedBody = rtrim(chunk_split(base64_encode(str_replace(["\r\n", "\r"], "\n", $body)), 76, "\r\n"), "\r\n");
 
             $this->command($socket, $headers . "\r\n" . $escapedBody . "\r\n.", 250);
             $this->command($socket, "QUIT", 221);
