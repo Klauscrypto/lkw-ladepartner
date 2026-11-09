@@ -71,7 +71,7 @@ const t = ui[lang].form;
       btn.textContent = t.sending;
       try {
         const res = await fetch('/send.php', { method: 'POST', body: data, headers: { 'Accept': 'application/json' } });
-        const json = await res.json().catch(() => ({ ok: res.ok }));
+        const json = await res.json().catch(() => ({ ok: false }));
         if (res.ok && json.ok) {
           status.textContent = t.ok;
           status.classList.add('is-ok');
